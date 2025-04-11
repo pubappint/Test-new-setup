@@ -1,0 +1,549 @@
+# Code-Katalog des Projekts
+
+## Ordner: src
+
+Dieser Ordner enthält derzeit ein Python-Modul.
+
+### Modul: `__init__.py`
+
+*   **Beschreibung:** Initialisierungsdatei für das `src`-Paket.
+*   **Inhalt:** Leer, dient zur Markierung des Ordners als Python-Paket.
+
+## Ordner: lib
+
+Dieser Ordner enthält den Großteil des Dart-Codes für die Flutter-App.
+
+### Modul: `database_admin.dart`
+
+*   **Klassen:**
+    *   `DatabaseAdmin`:
+        *   **Attribute:**
+            *   `client` (MongoDB-Client).
+            *   `db` (MongoDB-Datenbank).
+        *   **Funktionen:**
+            *   `DatabaseAdmin(String uri)`: Konstruktor, initialisiert den MongoDB-Client und die Datenbank.
+            *   `connect()`: Stellt die Verbindung zur Datenbank her.
+            *   `create_bar_data(String collectionName, List<BarData> data)`: Fügt eine Liste von `BarData`-Objekten zu einer angegebenen Kollektion hinzu.
+            *   `get_collection_names()`: Gibt eine Liste der Kollektionsnamen zurück.
+            *   `close()`: Schließt die Datenbankverbindung.
+*   **Variablen:**
+    *   `client`: eine Instanz der `MongoClient` Klasse.
+    * `db`: eine Instanz der `Db` Klasse.
+*   **Importe:**
+    *   `package:mongo_dart/mongo_dart.dart`
+    *   `package:myapp/database/mongodb/bar_data.dart`
+*   **Verwendungen:**
+    *   Wird in Test-Dateien importiert und benutzt.
+
+### Modul: `main.dart`
+
+*   **Funktionen:**
+    *   `main()`: Einstiegspunkt der App.
+*   **Klassen:**
+    * `MyApp`
+*   **Variablen:**
+    * `app`: eine Instanz der MyApp Klasse.
+*   **Importe:**
+    *   `package:flutter/material.dart`
+    *   `package:myapp/myapp.code-workspace`
+
+### Modul: `myapp.code-workspace`
+
+* **Beschreibung**: Enthält die Workspace Konfiguration für die Entwicklungsumgebung
+
+### Ordner: `core`
+
+#### Modul: `config.dart`
+
+*   **Klassen:**
+    *   `Config`:
+        *   **Attribute:**
+            *   `mongoDbUri`: Eine Konstante, die den MongoDB-Verbindungs-URI enthält.
+            *   `supabaseUrl`: Eine Konstante, die die Supabase-URL enthält.
+            *   `supabaseKey`: Eine Konstante, die den Supabase-Schlüssel enthält.
+*   **Verwendungen:**
+    *   Wird von anderen Dateien in `core` und `database` verwendet, um auf die Datenbankverbindungsdaten zuzugreifen.
+    * Wird auch von anderen Modulen importiert.
+
+#### Modul: `mongodb_service.dart`
+
+*   **Klassen:**
+    *   `MongoDBService`:
+        *   **Attribute:**
+            *   `_client` (MongoClient)
+            *   `_db` (Db)
+        *   **Funktionen:**
+            *   `MongoDBService()`: Konstruktor, initialisiert die Verbindung zur MongoDB-Datenbank.
+            *   `connect()`: Stellt die Verbindung zur MongoDB-Datenbank her.
+            *   `close()`: Schließt die MongoDB-Datenbankverbindung.
+            *   `getAllBars()`: Ruft alle Bars aus der MongoDB-Datenbank ab.
+            *   `getAllEvents()`: Ruft alle Events aus der MongoDB-Datenbank ab.
+            *   `getBar(String id)`: Ruft eine Bar mit der angegebenen ID aus der MongoDB-Datenbank ab.
+            *   `getEvent(String id)`: Ruft ein Event mit der angegebenen ID aus der MongoDB-Datenbank ab.
+            *   `addNewBar(Bar bar)`: Fügt eine neue Bar zur MongoDB-Datenbank hinzu.
+            *   `addNewEvent(Event event)`: Fügt ein neues Event zur MongoDB-Datenbank hinzu.
+*   **Variablen:**
+    * `_client`: eine Instanz der `MongoClient` Klasse.
+    * `_db`: eine Instanz der `Db` Klasse.
+*   **Importe:**
+    *   `package:mongo_dart/mongo_dart.dart`
+    *   `package:myapp/core/config.dart`
+    *   `package:myapp/database/mongodb/bar.dart`
+    *   `package:myapp/database/mongodb/event.dart`
+*   **Verwendungen:**
+    *   Wird in Testdateien importiert und zum Testen der Datenbankfunktionalität genutzt.
+    * Wird von anderen Modulen importiert.
+
+#### Modul: `supabase_service.dart`
+
+*   **Klassen:**
+    *   `SupabaseService`:
+        *   **Attribute:**
+            *   `client` (SupabaseClient)
+        *   **Funktionen:**
+            *   `SupabaseService()`: Konstruktor, initialisiert die Verbindung zu Supabase.
+            * `getAllPubs()`: holt sich alle Pubs aus Supabase.
+            * `getPub(String id)`: holt sich einen Pub anhand der Id aus Supabase.
+            * `addNewPub(Pub pub)`: fügt ein neues Pub zur Supabase hinzu.
+            * `getAllReviews()`: holt sich alle Reviews aus Supabase.
+            * `addNewReview(Review review)`: fügt eine neue Review zur Supabase hinzu.
+            * `addNewBeer(Beer beer)`: fügt ein neues Bier zur Supabase hinzu.
+            * `getAllBeers()`: holt sich alle Biere aus Supabase.
+            * `addNewBrewery(Brewery brewery)`: fügt eine neue Brauerei zur Supabase hinzu.
+            * `getAllBreweries()`: holt sich alle Brauereien aus Supabase.
+            * `addNewFavorite(Favorite favorite)`: fügt ein neues Favorit zu Supabase hinzu.
+            * `getAllFavorites()`: holt sich alle Favoriten aus Supabase.
+            * `addNewFollow(Follow follow)`: fügt ein neues Follow zu Supabase hinzu.
+            * `getAllFollows()`: holt sich alle Follows aus Supabase.
+            * `close()`: Schließt die Verbindung zu Supabase.
+*   **Variablen:**
+    * `client`: eine Instanz der `SupabaseClient` Klasse.
+*   **Importe:**
+    *   `package:supabase_flutter/supabase_flutter.dart`
+    * `package:myapp/core/config.dart`
+    * `package:myapp/database/supabase/pub.dart`
+    * `package:myapp/database/supabase/review.dart`
+    * `package:myapp/database/supabase/beer.dart`
+    * `package:myapp/database/supabase/brewery.dart`
+    * `package:myapp/database/supabase/favorite.dart`
+    * `package:myapp/database/supabase/follow.dart`
+*   **Verwendungen:**
+    *   Wird in Testdateien importiert und zum Testen der Datenbankfunktionalität genutzt.
+    * Wird von anderen Modulen importiert.
+
+#### Modul: `user.dart`
+
+*   **Klassen:**
+    *   `User`:
+        *   **Attribute:**
+            *   `id`: Benutzer-ID.
+            *   `name`: Benutzername.
+            *   `email`: E-Mail-Adresse des Benutzers.
+        * **Funktionen:**
+            * `User()`: Konstruktor der Klasse
+        *   **Verwendungen:**
+            *   Wird von anderen Dateien in `core` verwendet.
+            * Wird von anderen Modulen importiert.
+*   **Variablen:**
+    *   `id`: speichert die ID des Users.
+    *   `name`: speichert den Name des Users.
+    * `email`: speichert die Email des Users.
+
+### Ordner: `services`
+
+#### Modul: `database_connection.dart`
+
+*   **Klassen:**
+    * `DatabaseConnection`
+        * **Funktionen:**
+            * `DatabaseConnection()`: Konstruktor der Klasse.
+            * `connectToMongoDB(String uri)`: Stellt die Verbindung zu der MongoDB her.
+            * `connectToSupabase(String url, String key)`: Stellt die Verbindung zu der Supabase her.
+*   **Importe:**
+    *   `package:myapp/core/mongodb_service.dart`
+    *   `package:myapp/core/supabase_service.dart`
+    *   `package:myapp/core/config.dart`
+*   **Verwendungen:**
+    * Wird von anderen Modulen importiert.
+
+### Ordner: `database`
+
+#### Unterordner: `mongodb`
+
+##### Modul: `bar_data.dart`
+
+*   **Klassen:**
+    *   `BarData`:
+        *   **Attribute:**
+            *   `id`
+            *   `name`
+            *   `adresse`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein BarData Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein BarData Objekt um.
+*   **Verwendungen:**
+    *   Wird von `database_admin.dart` verwendet, um `BarData`-Objekte zu verarbeiten.
+    * Wird von anderen Modulen importiert.
+
+##### Modul: `event.dart`
+
+*   **Klassen:**
+    *   `Event`:
+        *   **Attribute:**
+            *   `id`
+            *   `name`
+            *   `description`
+            * `pub`
+            * `date`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein Event Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein Event Objekt um.
+*   **Verwendungen:**
+    *   Wird von `mongodb_service.dart` verwendet, um Event Objekte zu verarbeiten.
+    * Wird von anderen Modulen importiert.
+
+##### Modul: `pub.dart`
+
+*   **Klassen:**
+    *   `Pub`:
+        *   **Attribute:**
+            *   `id`
+            *   `name`
+            *   `address`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein Pub Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein Pub Objekt um.
+*   **Verwendungen:**
+    *   Wird von `mongodb_service.dart` verwendet, um Pub Objekte zu verarbeiten.
+    * Wird von anderen Modulen importiert.
+
+#### Unterordner: `supabase`
+
+##### Modul: `bar.dart`
+
+*   **Klassen:**
+    *   `Bar`:
+        *   **Attribute:**
+            *   `id`
+            *   `name`
+            *   `address`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein Bar Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein Bar Objekt um.
+*   **Verwendungen:**
+    *   Wird von anderen Modulen benutzt.
+    * Wird von anderen Modulen importiert.
+
+##### Modul: `beer.dart`
+
+*   **Klassen:**
+    *   `Beer`:
+        *   **Attribute:**
+            *   `id`
+            *   `name`
+            *   `brewery`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein Beer Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein Beer Objekt um.
+*   **Verwendungen:**
+    *   Wird von `supabase_service.dart` verwendet, um Beer Objekte zu verarbeiten.
+    * Wird von anderen Modulen importiert.
+
+##### Modul: `brewery.dart`
+
+*   **Klassen:**
+    *   `Brewery`:
+        *   **Attribute:**
+            *   `id`
+            *   `name`
+            * `location`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein Brewery Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein Brewery Objekt um.
+*   **Verwendungen:**
+    *   Wird von `supabase_service.dart` verwendet, um Brewery Objekte zu verarbeiten.
+    * Wird von anderen Modulen importiert.
+
+##### Modul: `favorite.dart`
+
+*   **Klassen:**
+    *   `Favorite`:
+        *   **Attribute:**
+            *   `id`
+            *   `user`
+            * `pub`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein Favorite Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein Favorite Objekt um.
+*   **Verwendungen:**
+    *   Wird von `supabase_service.dart` verwendet, um Favorite Objekte zu verarbeiten.
+    * Wird von anderen Modulen importiert.
+
+##### Modul: `follow.dart`
+
+*   **Klassen:**
+    *   `Follow`:
+        *   **Attribute:**
+            *   `id`
+            *   `follower`
+            * `followed`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein Follow Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein Follow Objekt um.
+*   **Verwendungen:**
+    *   Wird von `supabase_service.dart` verwendet, um Follow Objekte zu verarbeiten.
+    * Wird von anderen Modulen importiert.
+
+##### Modul: `pub.dart`
+
+*   **Klassen:**
+    *   `Pub`:
+        *   **Attribute:**
+            *   `id`
+            *   `name`
+            * `location`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein Pub Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein Pub Objekt um.
+*   **Verwendungen:**
+    *   Wird von `supabase_service.dart` verwendet, um Pub Objekte zu verarbeiten.
+    * Wird von anderen Modulen importiert.
+
+##### Modul: `review.dart`
+
+*   **Klassen:**
+    *   `Review`:
+        *   **Attribute:**
+            *   `id`
+            *   `user`
+            * `pub`
+            * `rating`
+            * `text`
+        * **Funktionen:**
+            * `toJson()`: wandelt ein Review Objekt in ein Json Objekt um.
+            * `fromJson(Map<String, dynamic> json)`: wandelt ein Json Objekt in ein Review Objekt um.
+*   **Verwendungen:**
+    *   Wird von `supabase_service.dart` verwendet, um Review Objekte zu verarbeiten.
+    * Wird von anderen Modulen importiert.
+
+## Ordner: features
+
+Dieser Ordner enthält die Dart-Dateien, die die einzelnen Features der App implementieren.
+
+### Ordner: `event`
+
+#### Modul: `event_detail.dart`
+
+*   **Klassen:**
+    *   Enthält Klassen und Widgets für die Detailansicht eines Events.
+* **Verwendungen**:
+    * Wird von anderen Modulen importiert.
+
+#### Modul: `event_list.dart`
+
+*   **Klassen:**
+    *   Enthält Klassen und Widgets für die Liste der Events.
+* **Verwendungen**:
+    * Wird von anderen Modulen importiert.
+
+### Ordner: `pub`
+
+#### Modul: `pub_detail.dart`
+
+*   **Klassen:**
+    *   Enthält Klassen und Widgets für die Detailansicht eines Pubs.
+* **Verwendungen**:
+    * Wird von anderen Modulen importiert.
+
+#### Modul: `pub_list.dart`
+
+*   **Klassen:**
+    *   Enthält Klassen und Widgets für die Liste der Pubs.
+* **Verwendungen**:
+    * Wird von anderen Modulen importiert.
+
+### Ordner: `auth`
+
+#### Ordner: `login`
+
+##### Modul: `login_form.dart`
+
+* **Klassen**:
+    * `LoginForm`: Widget, das das Login-Formular darstellt.
+* **Verwendungen**:
+    * Wird von `login_page.dart` verwendet.
+
+##### Modul: `login_page.dart`
+
+* **Klassen**:
+    * `LoginPage`: Widget, das die Login-Seite darstellt.
+* **Verwendungen**:
+    * Wird von anderen Modulen importiert.
+
+#### Ordner: `profile`
+
+##### Modul: `profile_page.dart`
+
+* **Klassen**:
+    * `ProfilePage`: Widget, das die Profilseite darstellt.
+* **Verwendungen**:
+    * Wird von anderen Modulen importiert.
+
+#### Ordner: `register`
+
+##### Modul: `register_form.dart`
+
+* **Klassen**:
+    * `RegisterForm`: Widget, das das Registrierungsformular darstellt.
+* **Verwendungen**:
+    * Wird von `register_page.dart` verwendet.
+
+##### Modul: `register_page.dart`
+
+* **Klassen**:
+    * `RegisterPage`: Widget, das die Registrierungsseite darstellt.
+* **Verwendungen**:
+    * Wird von anderen Modulen importiert.
+
+## Ordner: test
+
+Dieser Ordner enthält Testdateien für die Flutter-App und Python-Testdateien.
+
+### Ordner: `client`
+
+#### Modul: `__init__.py`
+
+*   **Beschreibung:** Initialisierungsdatei für das `client`-Paket.
+
+#### Modul: `test_calculations.py`
+
+*   **Funktionen:**
+    * Enthält Testfunktionen für Berechnungen.
+* **Verwendungen**:
+    * Enthält Testfunktionen, die die Funktionalitäten aus anderen Modulen aufrufen.
+
+#### Modul: `test_client.py`
+
+*   **Funktionen:**
+    * Enthält Testfunktionen für den Client.
+* **Verwendungen**:
+    * Enthält Testfunktionen, die die Funktionalitäten aus anderen Modulen aufrufen.
+
+#### Modul: `test_filter.py`
+
+*   **Funktionen:**
+    * Enthält Testfunktionen für Filter.
+* **Verwendungen**:
+    * Enthält Testfunktionen, die die Funktionalitäten aus anderen Modulen aufrufen.
+
+#### Modul: `test_validation.py`
+
+*   **Funktionen:**
+    * Enthält Testfunktionen für Validierungen.
+* **Verwendungen**:
+    * Enthält Testfunktionen, die die Funktionalitäten aus anderen Modulen aufrufen.
+
+### Ordner: `core`
+
+#### Modul: `mongodb_service_test.dart`
+
+*   **Funktionen:**
+    *   Enthält Testfunktionen für den `MongoDBService`.
+* **Importe:**
+    *   `package:flutter_test/flutter_test.dart`
+    *   `package:myapp/core/mongodb_service.dart`
+    *   `package:myapp/database/mongodb/bar.dart`
+    *   `package:myapp/database/mongodb/event.dart`
+    * `package:myapp/core/config.dart`
+* **Verwendungen**:
+    * Enthält Testfunktionen, die die Funktionalitäten aus `mongodb_service.dart` aufrufen.
+
+#### Modul: `supabase_service_test.dart`
+
+*   **Funktionen:**
+    *   Enthält Testfunktionen für den `SupabaseService`.
+* **Importe:**
+    *   `package:flutter_test/flutter_test.dart`
+    *   `package:myapp/core/supabase_service.dart`
+    *   `package:myapp/database/supabase/bar.dart`
+    *   `package:myapp/database/supabase/beer.dart`
+    *   `package:myapp/database/supabase/brewery.dart`
+    *   `package:myapp/database/supabase/favorite.dart`
+    *   `package:myapp/database/supabase/follow.dart`
+    *   `package:myapp/database/supabase/pub.dart`
+    *   `package:myapp/database/supabase/review.dart`
+    * `package:myapp/core/config.dart`
+* **Verwendungen**:
+    * Enthält Testfunktionen, die die Funktionalitäten aus `supabase_service.dart` aufrufen.
+
+### Ordner: `database`
+
+#### Modul: `__init__.py`
+
+*   **Beschreibung:** Initialisierungsdatei für das `database`-Paket.
+
+#### Modul: `test_database.py`
+
+*   **Funktionen:**
+    * Enthält Testfunktionen für die Datenbank.
+* **Verwendungen**:
+    * Enthält Testfunktionen, die die Funktionalitäten aus anderen Modulen aufrufen.
+
+#### Modul: `test_table.py`
+
+*   **Funktionen:**
+    * Enthält Testfunktionen für Tabellen.
+* **Verwendungen**:
+    * Enthält Testfunktionen, die die Funktionalitäten aus anderen Modulen aufrufen.
+
+### Ordner: `widget`
+
+#### Modul: `test_bar_details.dart`
+
+* **Verwendungen**:
+    * Enthält Testfunktionen für die Darstellung der Bar Details.
+
+#### Modul: `test_filter_widgets.dart`
+
+* **Verwendungen**:
+    * Enthält Testfunktionen für die Darstellung der Filter Widgets.
+
+#### Modul: `test_list_widget.dart`
+
+* **Verwendungen**:
+    * Enthält Testfunktionen für die Darstellung der Liste Widgets.
+
+#### Modul: `test_login_register.dart`
+
+* **Verwendungen**:
+    * Enthält Testfunktionen für die Darstellung des Login und Register Widgets.
+
+#### Modul: `test_map_widget.dart`
+
+* **Verwendungen**:
+    * Enthält Testfunktionen für die Darstellung des Map Widgets.
+
+#### Modul: `test_navigation_widget.dart`
+
+* **Verwendungen**:
+    * Enthält Testfunktionen für die Darstellung der Navigation Widgets.
+
+### Ordner: `features`
+#### Ordner: `pub`
+
+##### Modul: `pub_detail_test.dart`
+* **Verwendungen**:
+    * Enthält Testfunktionen für das pub_detail feature.
+
+##### Modul: `pub_list_test.dart`
+* **Verwendungen**:
+    * Enthält Testfunktionen für das pub_list feature.
+### Modul: `integration_test.dart`
+
+* **Verwendungen**:
+    * Enthält Testfunktionen für die integration tests.
+
+### Modul: `widget_test.dart`
+
+* **Verwendungen**:
+    * Enthält Testfunktionen für die widget tests.
