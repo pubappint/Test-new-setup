@@ -1,9 +1,14 @@
-# MongoDB Schema für die `logs` Collection
+# Datenbankstruktur
 
-## Collection Name: `logs`
+## Einführung
 
-## Felder
+Dieses Dokument beschreibt die Strukturen der beiden verwendeten Datenbanken: MongoDB (NoSQL) und Supabase (SQL). Es erläutert die Schemata, Tabellen, Attribute und Beziehungen zwischen den Tabellen.
 
+## MongoDB Schema
+
+MongoDB ist eine dokumentenorientierte NoSQL-Datenbank. Es gibt keine feste Struktur für die Daten. Die Collection wird dynamisch erstellt.
+### Collection Name:   Die Collection wird dynamisch bei der erstellung der Logeinträge erstellt.
+### Felder
 | Feld        | Datentyp | Beschreibung                                                                    |
 | :---------- | :------- | :------------------------------------------------------------------------------ |
 | `_id`       | `ObjectId` | Eindeutiger Identifikator für jedes Dokument (automatisch von MongoDB erstellt) |
@@ -12,13 +17,13 @@
 | `level`     | `String`   | Der Schweregrad des Logs (z.B. INFO, WARNING, ERROR)                         |
 | `user`      | `String`   | Der Benutzer, der den Log ausgelöst hat.                                     |
 
-# Supabase Schema
+## Supabase Schema
 
-## Tabelle: `bars`
-
+Supabase ist eine relationale SQL-Datenbank. Die Daten sind in Tabellen organisiert.
+### Tabelle: `pubs`
 | Feld            | Datentyp           | Beschreibung                                               |
 | :-------------- | :----------------- | :--------------------------------------------------------- |
-| `id`            | `UUID` oder `INT`  | Eindeutiger Identifikator (Primary Key)                     |
+| `id`            | `UUID`  | Eindeutiger Identifikator (Primary Key)                     |
 | `name`          | `VARCHAR`          | Index                                                        |
 | `address`       | `VARCHAR`        |                                                              |
 | `city`          | `VARCHAR`        |                                                              |
@@ -26,125 +31,80 @@
 | `description`   | `VARCHAR`        |                                                              |
 | `image`         | `VARCHAR`        |                                                              |
 | `average_rating`| `NUMERIC`        |                                                              |
-
-## Tabelle: `users`
-
+### Tabelle: `users`
 | Feld     | Datentyp          | Beschreibung                                       |
 | :------- | :---------------- | :------------------------------------------------- |
-| `id`     | `UUID` oder `INT` | Eindeutiger Identifikator (Primary Key)            |
+| `id`     | `UUID` | Eindeutiger Identifikator (Primary Key)            |
 | `name`   | `VARCHAR`        | Index                                                        |
 | `email`  | `VARCHAR`        |                                                               |
-| `password` | `VARCHAR`        |                                                              |
-| `avatar`     | `VARCHAR`        |                                                              |
-
-## Tabelle: `events`
-
+### Tabelle: `events`
 | Feld          | Datentyp          | Beschreibung                                                      |
 | :------------ | :---------------- | :---------------------------------------------------------------- |
-| `id`          | `UUID` oder `INT` | Eindeutiger Identifikator (Primary Key)                          |
-| `bar_id`      | `UUID` oder `INT` | Foreign Key, Index                                                   |
+| `id`          | `UUID` | Eindeutiger Identifikator (Primary Key)                          |
 | `name`        | `VARCHAR`        |                                                                    |
 | `date`        | `TIMESTAMP`      | Index                                                              |
 | `description` | `VARCHAR`        |                                                                    |
 | `image`        | `VARCHAR`        |                                                              |
-
-## Tabelle: `reviews`
-
+### Tabelle: `reviews`
 | Feld     | Datentyp          | Beschreibung                                                |
 | :------- | :---------------- | :---------------------------------------------------------- |
-| `id`     | `UUID` oder `INT` | Eindeutiger Identifikator (Primary Key)                    |
-| `bar_id` | `UUID` oder `INT` | Fremdschlüssel, verweist auf `bars.id`                  |
-| `user_id`| `UUID` oder `INT` | Fremdschlüssel, verweist auf `users.id`                        |
+| `id`     | `UUID` | Eindeutiger Identifikator (Primary Key)                    |
+| `pub_id` | `UUID` | Fremdschlüssel, verweist auf `pubs.id`                  |
+| `user_id`| `UUID` | Fremdschlüssel, verweist auf `users.id`                        |
 | `text`    | `VARCHAR`        |                                                                    |
 | `rating`  | `INT`            |                                                                    |
 | `date` | `TIMESTAMP` | |
-
-
-## Tabelle: `favorites`
-
+### Tabelle: `favorites`
 | Feld     | Datentyp          | Beschreibung                                                   |
 | :------- | :---------------- | :------------------------------------------------------------- |
-| `id`     | `UUID` oder `INT` | Eindeutiger Identifikator (Primary Key)                       |
-| `bar_id` | `UUID` oder `INT` | Fremdschlüssel, verweist auf `bars.id`                     |
-| `user_id`| `UUID` oder `INT` | Fremdschlüssel, verweist auf `users.id`                         |
+| `id`     | `UUID` | Eindeutiger Identifikator (Primary Key)                       |
+| `pub_id` | `UUID` | Fremdschlüssel, verweist auf `pubs.id`                     |
+| `user_id`| `UUID` | Fremdschlüssel, verweist auf `users.id`                         |
 | `date`| `TIMESTAMP` | Das Datum an dem die Bar als Favorit markiert wurde |
-
-
+### Tabelle: `beers`
+| Feld       | Datentyp | Beschreibung                               |
+| :--------- | :------- | :----------------------------------------- |
+| `id`       | `UUID`   | Eindeutiger Identifikator (Primary Key)  |
+| `name`     | `VARCHAR` |                                            |
+| `brewery_id` | `UUID`   | Fremdschlüssel, verweist auf `breweries.id` |
+### Tabelle: `breweries`
+| Feld     | Datentyp | Beschreibung                                     |
+| :------- | :------- | :----------------------------------------------- |
+| `id`     | `UUID`   | Eindeutiger Identifikator (Primary Key)        |
+| `name`   | `VARCHAR` |                                                  |
+|`location`| `VARCHAR` |                                                  |
+### Tabelle: `follows`
+| Feld        | Datentyp | Beschreibung                                                                    |
+| :---------- | :------- | :------------------------------------------------------------------------------ |
+| `id`          | `UUID` | Eindeutiger Identifikator (Primary Key) |
+| `follower_id` | `UUID` | Fremdschlüssel, verweist auf `users.id`. ID des Benutzers, der folgt.|
+| `followed_id` | `UUID` | Fremdschlüssel, verweist auf `users.id`. ID des Benutzers, dem gefolgt wird. |
 
 ## Beziehungen zwischen den Schemas
 
-Es gibt keine direkten Beziehungen zwischen den Datenbanken.
-
-Die einzige Verbindung zwischen den Schemas besteht über den Benutzer.
-
-Die Supabase Tabelle `users` ist mit der MongoDB Collection `logs` über das Feld `user` verbunden. In der MongoDB Collection wird der Name des Benutzers gespeichert.
+Es gibt keine direkte Verbindung zwischen den beiden Datenbanken. Es handelt sich um zwei Datenbanken, eine NoSql und eine SQL Datenbank.
 
 ## Diagramm der Tabellen Beziehungen
 
+Das folgende Diagramm zeigt die Beziehungen zwischen den Tabellen in der Supabase-Datenbank. Es gibt kein Diagramm für die MongoDB, da sie keine feste Struktur hat.
+
 +----------+        1:n       +----------+
-|   bars   | <-------------- |  events  |
+|   pubs   | <-------------- |  events  |
 +----------+                 +----------+
-     ^                        
-     |                        
-     | 1:n                    
-     |                        
+     ^                             |
+     |     1:n                 |
 +----------+        1:n       +----------+
 | reviews  | <-------------- |  users   |
 +----------+                 +----------+
-     ^                        
-     |                        
-     | 1:n                    
-     |                        
-+----------+                 
-|favorites |                 
-+----------+
-
-## Beschreibung der Beziehungen zwischen den Tabellen
-
-### Primärschlüssel (Primary Keys)
-
-Jede Tabelle in Supabase hat einen Primärschlüssel (Primary Key). Dieser dient dazu, jeden Eintrag in der Tabelle eindeutig zu identifizieren. In unserem Fall ist das in jeder Tabelle das Feld `id`. Es kann entweder den Datentyp `UUID` oder `INT` haben.
-
-### Fremdschlüssel (Foreign Keys)
-
-Die Fremdschlüssel (Foreign Keys) verweisen auf den Primärschlüssel (Primary Key) einer anderen Tabelle. Durch die Fremdschlüssel können wir eine Verbindung zwischen den Tabellen herstellen.
-
-*   **`events`**
-    *   `bar_id`: Dies ist ein Fremdschlüssel, der auf die `id` in der `bars`-Tabelle verweist. Er zeigt an, in welcher Bar das Event stattfindet.
-*   **`reviews`**
-    *   `bar_id`: Dies ist ein Fremdschlüssel, der auf die `id` in der `bars`-Tabelle verweist. Er zeigt an, welche Bar bewertet wurde.
-    *   `user_id`: Dies ist ein Fremdschlüssel, der auf die `id` in der `users`-Tabelle verweist. Er zeigt an, welcher Benutzer die Bewertung geschrieben hat.
-*   **`favorites`**
-    *   `bar_id`: Dies ist ein Fremdschlüssel, der auf die `id` in der `bars`-Tabelle verweist. Er zeigt an, welche Bar als Favorit gespeichert wurde.
-    *   `user_id`: Dies ist ein Fremdschlüssel, der auf die `id` in der `users`-Tabelle verweist. Er zeigt an, welcher Benutzer die Bar als Favorit gespeichert hat.
-
-### Beziehungen
-
-*   **`bars` und `events`**
-    *   Eine Bar (`bars`) kann mehrere Events (`events`) haben. Dies wird durch die 1:n-Beziehung (eins-zu-viele) dargestellt. Die `bar_id` in der `events`-Tabelle stellt die Verbindung her.
-*   **`bars` und `reviews`**
-    *   Eine Bar (`bars`) kann mehrere Bewertungen (`reviews`) haben. Dies wird durch die 1:n-Beziehung dargestellt. Die `bar_id` in der `reviews`-Tabelle stellt die Verbindung her.
-* **`users` und `reviews`**
-    * Ein Benutzer (`users`) kann mehrere Bewertungen (`reviews`) schreiben. Dies wird durch die 1:n-Beziehung dargestellt. Die `user_id` in der `reviews`-Tabelle stellt die Verbindung her.
-*   **`bars` und `favorites`**
-    *   Eine Bar (`bars`) kann von mehreren Benutzern als Favorit (`favorites`) gespeichert werden. Dies wird durch die 1:n-Beziehung dargestellt. Die `bar_id` in der `favorites`-Tabelle stellt die Verbindung her.
-* **`users` und `favorites`**
-    * Ein Benutzer (`users`) kann mehrere Bars als Favoriten (`favorites`) speichern. Dies wird durch die 1:n-Beziehung dargestellt. Die `user_id` in der `favorites`-Tabelle stellt die Verbindung her.
-
-### Indizes
-
-Indizes verbessern die Suchgeschwindigkeit in den Tabellen.
-
-* **bars**:
-    * `name`
-* **users**:
-    * `name`
-* **events**:
-    * `date`
-    * `bar_id`
-* **reviews**:
-    * `bar_id`
-    * `user_id`
-* **favorites**:
-    * `bar_id`
-    * `user_id`
+     ^                           ^
+     |                           | 1:n
+     |                       1:n
++----------+       +---------+        +-----------+
+|favorites |       |follows| <--------|   users   |
++----------+       +---------+        +-----------+
+   ^                      ^
+   |                      |
+   1:n                  1:n
++---------+       +-----------+
+|  beers  | <-----| breweries|
++---------+       +-----------+

@@ -152,3 +152,21 @@ Diese Testdefinition basiert auf der in `docs/teststrategie.md` formulierten Tes
     *   `testLogin()`: Testet den gesamten Login Prozess.
     *   `testRegister()`: Testet den gesamten Registrierungs Prozess.
     *   `testNavigation()`: Testet die Navigation zwischen den verschiedenen Seiten.
+
+## MongoDB Teststrategie
+
+Diese Teststrategie beschreibt, wie die verschiedenen Methoden in der `MongoDbService` Klasse getestet werden.
+
+*   **connect()**: Hier wird getestet, ob eine Verbindung zur Datenbank hergestellt werden kann.
+*   **close()**: Hier wird getestet, ob die Datenbank Verbindung korrekt geschlossen werden kann.
+*   **insert()**: Hier wird getestet, ob ein Objekt korrekt in die Datenbank eingefügt werden kann.
+    *   Zusätzlich wird hier auch überprüft, ob die Methode die richtige Id zurück gibt.
+*   **getById()**: Hier wird getestet, ob ein Objekt mit der richtigen Id abgerufen werden kann.
+*   **getAll()**: Hier wird getestet, ob alle Daten korrekt abgefragt werden.
+*   **changeLogLevel()**: Hier wird getestet, ob die Log Level korrekt geändert werden können.
+* **deleteMany()**: hier wird getestet, ob alle Einträge korrekt aus der Datenbank gelöscht werden.
+
+Für jeden Test wird die Datenbank am anfang zurück gesetzt. So werden Probleme durch alte Daten vermieden.
+
+
+

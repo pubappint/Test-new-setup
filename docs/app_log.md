@@ -134,6 +134,47 @@
     *   **Stufe 2: Community-Verifizierung:** Zusätzliche Verifizierung durch andere Nutzer.
 ---
 
+**MongoDB Test Strategie und Probleme**
+
+Die Tests für die MongoDB-Verbindung wurden mit dem Ziel entwickelt, die grundlegenden Operationen (CRUD - Create, Read, Update, Delete) zu überprüfen und sicherzustellen, dass die Datenbank korrekt angesprochen werden kann.
+
+**Test Strategie**
+
+1. **Verbindungstest:** Überprüfung, ob die App eine Verbindung zur MongoDB-Datenbank herstellen kann.
+2. **Einfügetest (`insert`):** Test, ob ein neues Dokument erfolgreich in eine Collection eingefügt werden kann. Hier wird ebenfalls überprüft, ob die `_id` korrekt gespeichert und zurückgegeben wird.
+3. **Abruftest (`getAll`):** Test, ob alle Dokumente einer Collection korrekt abgerufen werden können.
+4. **Abruftest (`getById`):** Test, ob ein Dokument anhand seiner `_id` korrekt abgerufen werden kann.
+5. **Löschtest (`deleteMany`)**: Test ob mehrere Dokumente gelöscht werden können.
+6. **LogLevel Test**: Testet ob die Log Level angepasst werden können.
+7. **Schließen der Verbindung:** Überprüfung, ob die Verbindung zur Datenbank korrekt geschlossen werden kann.
+
+**Probleme**
+
+Bei der Implementierung der Tests sind mehrere Probleme aufgetreten, die in mehreren Iterationen behoben werden mussten. Das größte Problem war die korrekte Handhabung der `ObjectId`. Am Anfang wurde diese als String verwendet, obwohl diese ein Objekt war. Dies führte zu Problemen beim Einfügen und Abrufen der Dokumente. Ebenfalls gab es Probleme, da die Object Id immer wieder umgewandelt wurde. Um diese Fehler zu vermeiden, müssen wir in den Tests und den Methoden darauf achten, das nicht umgewandelt wird.
+Ein weiteres Problem war das Zurücksetzen der Datenbank vor jedem Test. Am Anfang wurde nicht beachtet, dass die Tests parallel laufen, und sich dadurch überschneiden. Dies wurde durch eine Löschung aller Dokumente vor jedem Test behoben.
+Ebenso gab es Probleme mit der Implementierung der Methoden. Hier gab es öfter Fehler, da Methoden aufgerufen wurden, die es nicht gab.
+
+Nach vielen Iterationen und Anpassungen können nun alle Tests für die MongoDB korrekt durchgeführt werden.
+
+**Supabase Init Test**
+
+Um sicherzustellen, dass die Verbindung zur Supabase-Datenbank korrekt initialisiert wird, haben wir einen Test in `main.dart` hinzugefügt. Dieser Test überprüft, ob die Supabase-Verbindung erfolgreich hergestellt wurde, wenn die App startet. Diese Änderung dient als Grundlage, um weitere Funktionen von Supabase zu testen.
+
+**Concurrent Database Connection Test**
+
+Um sicherzustellen, dass sowohl die MongoDB- als auch die Supabase-Datenbank parallel korrekt initialisiert werden können, wurde der Testfall `concurrent_database_connection_test.dart` erstellt. Dieser Test überprüft, ob beide Datenbankverbindungen gleichzeitig aufgebaut werden können und am Ende korrekt geschlossen werden. Dazu werden die `initialize()` und `close()` Methoden der Datenbank-Services aufgerufen und deren `isConnected` Status überprüft.
+
+
+Die Tests zur sicherstellung der Verbindungen zu den einzelen Datenbanken befinden sich in den Dateien "test/database/mongodb_connection_test.dart" und "test/database/supabase_connection_test.dart". Diese stellen sicher, dass die Verbindung zu den jeweiligen Datenbanken einzeln erfolgreich aufgebaut werden kann. Mit der Datei "test/core/concurrent_database_connection_test.dart" ist sicher gestellt, dass die Verbindungen auch parallel aufgebaut werden können. Dies wurde in mehreren Iterationen geprüft. Das Ergebnis ist, dass die Verbindungen sowohl einzeln, als auch paralell ohne Probleme aufgebaut werden können.
+
+
+
+
+**Supabase Init Test**
+Um sicherzustellen, dass die Verbindung zur Supabase-Datenbank korrekt initialisiert wird, haben wir einen Test in `main.dart` hinzugefügt. Dieser Test überprüft, ob die Supabase-Verbindung erfolgreich hergestellt wurde, wenn die App startet. Diese Änderung dient als Grundlage, um weitere Funktionen von Supabase zu testen.
+
+
+
 **Weitere offene Punkte:**
 
 *   **Technologie-Stack:**

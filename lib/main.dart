@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:barfly/services/database_connection.dart';
 import 'package:barfly/core/supabase_service.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 
 Future<void> main() async {
@@ -15,7 +14,9 @@ Future<void> main() async {
   final supabaseService = SupabaseService(client: Supabase.instance.client);
   final DatabaseConnection databaseConnection = DatabaseConnection(supabaseService: supabaseService);
   
-  await databaseConnection.connectToDatabases();
+  await databaseConnection.connectToDatabases();  
+
+
   await databaseConnection.addLog("timestamp","test","info","system");
   
   runApp(const MyApp());  

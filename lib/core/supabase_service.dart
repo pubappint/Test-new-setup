@@ -1,5 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:barfly/core/user.dart' as user_model;
+import 'package:barfly/core/pub.dart';
 
 class SupabaseService {
   final SupabaseClient client;
@@ -32,6 +33,14 @@ class SupabaseService {
       password: response['password'],
     );
   }
+  
+  // Retrieves all pubs from the 'pub' table.
+  Future<List<Pub>> getAllPubs() async {
+    final response = await client.from('pub').select();
+    return response.map((pub) => Pub.fromJson(pub)).toList();
+  }
+
+
 
 
 

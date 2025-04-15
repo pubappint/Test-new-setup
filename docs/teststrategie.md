@@ -8,7 +8,7 @@
 *   Gewährleistung einer hohen Codequalität durch kontinuierliche Tests.
 *   Abdeckung aller wichtigen Funktionalitäten und Use Cases.
 *   Frühes Erkennen von Fehlern im Entwicklungsprozess.
-*   Sicherstellung, dass es keine Probleme im Zusammenspiel der Datenbank gibt.
+*   Sicherstellung, dass es keine Probleme im Zusammenspiel der Datenbank und der Module gibt.
 
 **2. Testarten**
 
@@ -36,21 +36,25 @@
         *   Testen des Zusammenspiels von UI, Filterlogik und Datenservice.
         *   Überprüfung der korrekten Datenübergabe zwischen verschiedenen Screens.
         *   Testen des Zusammenspiels von der MongoDB und Supabase.
+    * **Ergänzung**: Hier sollten alle Bereiche die von integrationstests betroffen sind aufgeführt werden.
 *   **Datenbanktests**
     *   **Ziel:** Überprüfung des korrekten Zusammenspiels mit der Datenbank, des anlegen von neuen Einträgen und dem löschen von Einträgen.
     *   **Fokus:** Datenkonsistenz, Datenintegrität, korrekte Abfragen.
     *   **Beispiele:**
-        *   Testen der Abfragen für Bars.
+        *   Testen der Abfragen für Pubs.
         *   Testen der Abfragen für Events.
-        *   Testen des hinzufügens von neuen Bars.
+        *   Testen des hinzufügens von neuen Pubs.
         *   Testen des hinzufügens von neuen Bieren.
+        * **Ergänzung**: Hier sollten alle Tabellen die von Datenbanktests betroffen sind aufgeführt werden.
 *   **UI-Tests/End-to-End-Tests (E2E):**
     *   **Ziel:** Überprüfung der gesamten App von Anfang bis Ende, wie ein Benutzer sie verwenden würde.
     *   **Fokus:** Korrekte Funktionalität aus Benutzersicht.
     *   **Framework:** Möglicherweise Drittanbieter-Tools, wenn nötig.
     *   **Beispiele:**
-        *   Testen eines kompletten Workflows (z.B. Bars suchen, filtern, Details anzeigen, bewerten).
+        *   Testen eines kompletten Workflows (z.B. Pubs suchen, filtern, Details anzeigen, bewerten).
         *   Überprüfung der korrekten Funktion der Favoritenliste.
+    * **Ergänzung**: Es sollte hier genau auf die Wichtigkeit dieser Tests hingewiesen werden.
+* **Ergänzung**: Es wurden bereits einige tests geschrieben.
 
 **3. Testabdeckung**
 
@@ -58,6 +62,7 @@
 *   **Pfadabdeckung:** Alle wichtigen Pfade und Workflows durch die App werden getestet.
 *   **Datenabdeckung:** Die Tests verwenden sowohl gültige als auch ungültige Daten, um die Robustheit zu gewährleisten.
 *   **Positive- und Negative Tests:** Es wird sowohl positive als auch Negative Tests geben.
+* **Ergänzung**: Die Abdeckung der Datenbanken sollte hier genauer beschrieben werden.
 
 **4. Testumgebung**
 
@@ -75,6 +80,7 @@
 *   **Kontinuierliche Integration:** Die Tests werden automatisch bei jedem Commit ausgeführt (falls CI vorhanden).
 *   **Manuelle Tests:** Zusätzliche manuelle Tests werden bei Bedarf durchgeführt.
 *   **Regressionstests:** Nach jeder Änderung werden Regressionstests durchgeführt, um sicherzustellen, dass keine neuen Fehler eingeführt wurden.
+* **Ergänzung**: Es sollte noch einmal genauer Beschrieben werden, wann Regressionstests ausgeführt werden sollen.
 
 **7. Testdokumentation**
 
@@ -85,13 +91,14 @@
 **8. Verantwortlichkeiten**
 
 *   Die Teststrategie wird vom Projektleiter erstellt und verwaltet.
-*   Der KI-Assistent unterstützt beim Schreiben und Ausführen der Tests.
+*   Der KI-Assistent unterstützt beim Schreiben und Ausführen der Tests und beim erstellen der Dokumentation.
 
 **9. Tools**
 
 *   Flutter Test Framework
 *   Flutter Driver (für E2E-Tests)
 *   Evtl. Drittanbieter-Tools für UI-Tests
+* **Ergänzung**: Es sollte hier noch genauer auf die Verwendung des Dart/Flutter Frameworks eingegangen werden.
 
 **10. Metriken**
 
@@ -99,3 +106,4 @@
 *   **Anzahl der gefundenen Fehler:** Anzahl der gefundenen Fehler pro Testdurchlauf.
 *   **Zeitaufwand für Tests:** Zeit, die für die Testdurchführung benötigt wird.
 *   **Anzahl der abgeschlossenen Test:** Anzahl der schon fertigen Tests.
+* **Ergänzung**: Es könnten noch weitere Metriken hinzugefügt werden, wie z.B. die Anzahl der Datenbanktests.
