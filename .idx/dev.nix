@@ -8,6 +8,7 @@
     pkgs.nodePackages.firebase-tools
     pkgs.jdk17
     pkgs.unzip
+    pkgs.python310
   ];
   # Sets environment variables in the workspace
   env = {};
@@ -52,8 +53,18 @@
       enable = true;
       previews = {
         web = {
-          command = ["flutter" "run" "--machine" "-d" "web-server" "--web-hostname" "0.0.0.0" "--web-port" "$PORT"];
-          manager = "flutter";
+          command = [
+          "npm"
+          "run"
+          "start"
+          "--"
+          "--port"
+          "$PORT"
+          "--host"
+          "0.0.0.0"
+          "--disable-host-check"
+        ];
+          manager = "web";
         };
         android = {
           command = ["flutter" "run" "--machine" "-d" "android" "-d" "localhost:5555"];

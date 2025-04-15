@@ -64,7 +64,7 @@
     *   **2.5.2 Datenquelle:**
         *   **Funktion:** OpenStreetMap (OSM).
         *   **Anforderung:** Einheitliche Datenstruktur, Community-basierte Datengenerierung, keine realen Kosten.
-    * **2.5.3 Verifizierung**
+    *   **2.5.3 Verifizierung**
       * **Funktion:** Sicherstellung korrekter Daten.
       * **Anforderung:** **Stufe 1: Moderation:** Moderatoren filtern und löschen offensichtlich falsche Einträge. **Stufe 2: Community-Verifizierung:** Zusätzliche Verifizierung durch andere Nutzer.
 *   **2.6 Wegbeschreibung:**
@@ -82,10 +82,11 @@
 *   **3.1 Technologie-Stack:**
     *   **Programmiersprache:** Dart
     *   **Framework:** Flutter
+    * **Supabase Paket**: Für die Kommunikation mit der Datenbank.
     *   **Plattformen:** Android und iOS
 *   **3.2 Datenbank:**
-    *   **Relationale Daten:** Supabase
-    *   **Nicht-relationale Daten:** MongoDB
+    *   **Relationale Daten:** Supabase (Direkte Kommunikation mit dem Flutter Paket)
+    *   **Nicht-relationale Daten:** MongoDB (Spätere Integration)
     *   **Hosting:** Online (für beide Datenbanken)
 *   **3.3 Schnittstellen:**
     *   **Kartendienst:** Leaflet (Karten), OSRM (Wegbeschreibung)
@@ -94,7 +95,7 @@
 *   **3.4 Monetarisierung:**
     *   **Aktuell:** Keine aktive Monetarisierung.
     *   **Spenden:** Option für Nutzer, freiwillig zu spenden.
-    *   **Optionen für später:** Freemium-Modell, Affiliate-Marketing, Datenanalyse.
+    *   **Optionen für später:** Freemium-Modell, Affiliate-Marketing, Datenanalyse, Werbung.
  *  **3.5 Design:**
     *   **Look:** Modern, clean.
     *   **Thema:** Bar, Bier, Geselligkeit.
@@ -172,16 +173,16 @@
 *   **Supabase:** Eine Open-Source-Alternative zu Firebase.
 *   **MongoDB:** Eine NoSQL-Datenbank.
 * **Flutter**: Ein Framework, das es ermöglicht, Apps für mehrere Systeme zu entwickeln.
-* **Dart**: Die Programmiersprache in der Flutter geschrieben ist.
-* **DSGVO**: Datenschutz-Grundverordnung.
-* **TMG**: Telemediengesetz.
-* **UWG**: Gesetz gegen den unlauteren Wettbewerb.
-* **JuSchG**: Jugendschutzgesetz.
-* **OpenStreetMap (OSM)**: Eine freie Weltkarte.
-* **Pubcrawl**: Kneipentour.
-* **Freemium**: Ein Modell, in dem Basis Funktionen kostenlos sind und andere Funktionen bezahlt werden müssen.
-* **Affiliate-Marketing**: Provisionen durch Vermittlung von Nutzern.
-* **NoSQL**: Eine nicht relationale Datenbank.
+*   **Dart**: Die Programmiersprache in der Flutter geschrieben ist.
+*   **DSGVO**: Datenschutz-Grundverordnung.
+*   **TMG**: Telemediengesetz.
+*   **UWG**: Gesetz gegen den unlauteren Wettbewerb.
+*   **JuSchG**: Jugendschutzgesetz.
+*   **OpenStreetMap (OSM)**: Eine freie Weltkarte.
+*   **Pubcrawl**: Kneipentour.
+*   **Freemium**: Ein Modell, in dem Basis Funktionen kostenlos sind und andere Funktionen bezahlt werden müssen.
+*   **Affiliate-Marketing**: Provisionen durch Vermittlung von Nutzern.
+*   **NoSQL**: Eine nicht relationale Datenbank.
 
 **6. Dokumenten Historie:**
 

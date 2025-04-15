@@ -1,133 +1,157 @@
+
 import 'package:barfly/core/log.dart';
 import 'package:barfly/core/config.dart';
-import 'package:mongo_dart/mongo_dart.dart' as mdb;
+import 'package:mongo_dart/mongo_dart.dart' as mongo;
+
 
 class MongoDBException implements Exception {
   final String message;
   MongoDBException(this.message);
 }
-enum LogLevel {  
-  debug,
-  info,
-  error
-}
 
-/// Service class for interacting with MongoDB.
-/// Service class for interacting with MongoDB.
-class MongoDBService {
-  late mdb.Db _db;  
-    mdb.Db getDb() {
-    return _db;
+/// Service class for interacting with MongoDB
+class MongoDbService {
+  late mongo.Db _db;
+  mongo.State get dbState => _db.state;
+  String _logLevel = 'INFO'; // Default log level
+
+  set logLevel(String level) {
+    switch (level) {
+      case 'ALL':
+      case 'FINE':
+      case 'INFO':
+      case 'SEVERE':
+        _logLevel = level;
+        break;
+      default:
+        _logLevel = 'INFO';
+    }
+    Log(message: "logLevel set to: $_logLevel", level: _logLevel, user: 'MongoDbService',timestamp: DateTime.now().toString());
   }
 
-  /// Initializes the MongoDB connection.
-  MongoDBService(){
+  
+  MongoDbService() {
     connect();
   }
   
   Future<List<Map<String, dynamic>>> getAll(String collection) async {
-    if (_db.state != mdb.State.open) { await _db.open(); }
-    await createLogsCollection();
-        
-    final coll = _db.collection(collection);    
-    return await coll.find().toList();
-  }
-  
-  Future<dynamic> getById(String collection, String id) async {
-      if (_db.state != mdb.State.open) {        
-        await _db.open();}
-      final coll = _db.collection(collection);
-      final res = await coll.findOne(mdb.where.id(mdb.ObjectId.fromHexString(id)));
-      if (res == null) {
+        if (_db.state != mongo.State.open) {
+            await _db.open();
+        }
+        await createLogsCollection();
+        final coll = _db.collection(collection);
+        final res =  await coll.find().toList();
+        return res;
+    }
+      Future<dynamic> getById(String collection, String id) async {
+        if (_db.state != mongo.State.open) {
+          await _db.open();
+        }
+        final coll = _db.collection(collection);
+    final res = await coll.findOne(mongo.where.id(mongo.ObjectId.fromHexString(id)));
+    if (res == null) {
+        Log(message: "Document with id $id not found in collection $collection", level: Log.kSevere, user: 'MongoDbService', timestamp: DateTime.now().toString());
         return null;
-      }
-      return null;
-    }
-  
-  Future<void> createLogsCollection() async {        
-    if (_db.state != mdb.State.open) { await _db.open(); }
-      
-    final collections = await _db.getCollectionNames();
-    
-    if (!collections.contains("app_logs")) {
-      await _db.createCollection("app_logs");
+    } else {
+      Log(message: "Successfully retrieved document with id $id in collection $collection", level: Log.kInfo, user: 'MongoDbService', timestamp: DateTime.now().toString());
+      return res..['_id'] = res['_id'].toHexString();
     }
   }
+
   
-  Future<String> insert(String collection, Map<String, dynamic> data, {required String level, required String user}) async {
-    if (_db.state != mdb.State.open) {
-      await _db.open();
-    }    
-        try {
-      final coll = _db.collection(collection);
-      final result = await coll.insertOne(data);
-      if (result.isSuccess) {
-        return result.id.toHexString();
-      }
-      throw MongoDBException("Failed to insert data. ${result.errmsg}");
-    } catch (e) {
-      throw MongoDBException("Failed to insert data. ${e.toString()}");
+
+
+  
+  Future<void> createLogsCollection() async {
+    if (_db.state != mongo.State.open) {
+      throw MongoDBException("Database is not open.");
     }
+    final collections = await _db.getCollectionNames();
+    if (!collections.contains("logs")) {
+      await _db.createCollection("logs");
+    }
+  }  
+
+
+   Future<String> insert(String collection, Map<String, dynamic> data) async {
+    if (_db.state != mongo.State.open) {
+      await _db.open();
+    }
+    final coll = _db.collection(collection);
+      Log(message: "Inserting data into $collection: $data", level: Log.kInfo, user: 'MongoDbService', timestamp: DateTime.now().toString());
+    String pubId;
+    if (data.containsKey('_id')) {
+      pubId = data['_id'];
+      data['_id'] = mongo.ObjectId.fromHexString(data['_id'] as String);
+    } else {
+      data['_id'] = mongo.ObjectId();
+      pubId = data['_id'].toHexString();
+    }
+    final result = await coll.insertOne(data);
+    if (result.isSuccess) {
+      return pubId.toString();
+    }
+
+    throw MongoDBException("Failed to insert data. ${result.errmsg ?? 'Result is null'}");
   }
 
   Future<void> update(Map<String, dynamic> data, String collection) async {
-      if (_db.state != mdb.State.open) {        
-        await _db.open();}
-
-      final coll = _db.collection(collection);
-      final id = data['_id'];
-      data.remove('_id');
-      final result = await coll.updateOne(mdb.where.id(id), { r'$set': data });
-      if (!result.isSuccess) {
-        throw MongoDBException("Failed to update data: ${result.errmsg}");
-      }
+    if (_db.state != mongo.State.open) {
+      await _db.open();
     }
+    final coll = _db.collection(collection);
+    final id = data['_id']!;
+    final result = await coll.updateOne(mongo.where.id(id), {r'$set': data..remove('_id')});
+    if (!result.isSuccess) {
+      throw MongoDBException("Failed to update data: ${result.errmsg ?? ''}");
+    }
+  }
+
+  Future<void> delete(String collection, String id) async {
+    if (_db.state != mongo.State.open) { await _db.open(); }
+    final coll = _db.collection(collection);
+    final result = await coll.deleteOne(mongo.where.id(mongo.ObjectId.fromHexString(id)));
+    if (!result.isSuccess) {
+      throw MongoDBException("Failed to delete data: ${result.errmsg ?? 'Result is null'}");
+    }
+  }
+
+  Future<void> deleteMany(String collection, mongo.SelectorBuilder filter) async {
+      if (_db.state != mongo.State.open) { await _db.open(); }
+      final coll = _db.collection(collection);
+      final result = await coll.deleteMany(filter);
+      if (!result.isSuccess) {
+          throw MongoDBException("Failed to delete data: ${result.errmsg ?? 'Result is null'}");
+      }
+  }
   
-    Future<void> delete(String collection, String id) async {
-      if (_db.state != mdb.State.open) {        
-        await _db.open();}
-
-      final coll = _db.collection(collection);
-      final result = await coll.deleteOne(mdb.where.id(mdb.ObjectId.fromHexString(id)));
-      if (!result.isSuccess) {
-        throw MongoDBException("Failed to delete data: ${result.errmsg}");
-      }
+   Future<void> deleteAll(String collection) async {
+    if (_db.state != mongo.State.open) {
+      await _db.open();
     }
+    final coll = _db.collection(collection);
+    await coll.deleteMany(mongo.where.exists('_id'));
+  }
 
   Future<void> close() async {
       await _db.close();
-    }
 
+  }
 
-  Future<void> addLog(Log log, String level, String user) async {
-    if (_db.state != mdb.State.open) { await _db.open(); }
-
-    
-      final collection = _db.collection("logs");
-      await collection.insertOne(log.toDatabase());
-    }
-  
-    Future<List<Log>> getLogs(String collection) async {
-      if (_db.state != mdb.State.open) {        
+    Future<void> deleteAllLogs() async {
+      if (_db.state != mongo.State.open) {
         await _db.open();
       }
-    final result = await _db.collection(collection).find().toList();
-      return result.map((log) => Log.fromDatabase(log)).toList();
-    }
+      await _db.collection("logs").deleteMany(mongo.where.exists('_id'));
+  }
 
-  Future<void> deleteAllLogs() async {
-      if (_db.state != mdb.State.open) {        
-        await _db.open();}
-
-      await _db.collection("logs").deleteMany(mdb.where.exists('_id'));
-    }
-
-  /// Connects to the MongoDB database.
   Future<void> connect() async {
       final mongoUri = Config.getMongoUri();
-      _db = mdb.Db(mongoUri);      
-  }
+      _db = mongo.Db(mongoUri);
+      try { 
+        await _db.open();
+        Log(message: "Successfully connected to MongoDB", level: Log.kInfo, user: 'MongoDbService', timestamp: DateTime.now().toString());
+      } catch (e) {
+         throw MongoDBException("Failed to connect to MongoDB: ${e.toString()}"); }
+    }
 }
-
-    
-

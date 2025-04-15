@@ -1,7 +1,7 @@
 
-
 /// Represents a log entry with timestamp, message, level, and user information.
 class Log {
+   static String logLevel = 'INFO';
   /// The timestamp of when the log entry was created.
   final String timestamp;
 
@@ -22,6 +22,14 @@ class Log {
     required this.user,
   });
 
+  /// Log Levels
+  static const String kAll = 'ALL';
+  static const String kFine = 'FINE';
+  static const String kSevere = 'SEVERE';
+  static const String kInfo = 'INFO';
+  static const String kWarning = 'WARNING';
+  
+  
   /// Converts the Log object into a database-compatible map.
   Map<String, dynamic> toDatabase() {
     return {

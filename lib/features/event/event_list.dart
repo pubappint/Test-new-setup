@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:barfly/services/database_connection.dart';
-import 'package:barfly/core/mongodb_service.dart';
 import 'package:barfly/core/mongodb_constants.dart' as mongodb_constants;
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:barfly/core/supabase_service.dart';
 import 'package:barfly/core/log.dart';
  
 class EventListPage extends StatefulWidget{
@@ -21,11 +22,12 @@ class _EventListPageState extends State<EventListPage> {
   }
 
  Future<List<Log>> _loadLogs() async {
-    final DatabaseConnection dbConnection = DatabaseConnection();
-    final MongoDBService mongoDBService = dbConnection.getMongoDBService;
+    final client = Supabase.instance.client;
+    final supabaseService = SupabaseService(client: client);
+    DatabaseConnection dbConnection = DatabaseConnection(supabaseService: supabaseService);
     try {
-      final List<dynamic> logs = await mongoDBService.getAll(mongodb_constants.logsCollection);
-      return logs.map((log) => Log.fromDatabase(log as Map<String, dynamic>)).toList();
+      final List<dynamic> logs = await dbConnection.mongoDBService.getAll(mongodb_constants.logsCollection);
+      return logs.map((log) => Log.fromDatabase(log)).toList();
       
     } catch (e) {
       throw Exception('Failed to load events: $e');

@@ -1,4 +1,11 @@
+/// Enum to represent the possible price levels.
+enum PriceLevel {
+  low,
+  medium,
+  high,
+}
 class MongoDatabaseConstants {
+  static const String logsCollection = 'logs';
   static const String userCollection = 'users';
   static const String barCollection = 'bars';
   static const String pubCollection = 'pubs';

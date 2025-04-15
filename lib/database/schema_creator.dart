@@ -11,11 +11,23 @@ class SchemaCreator {
     'beer',
     'brewery',
     'event',
-    'favorite',
+    'favorite',    
+    'users',
     'follow',
     'pub',
     'review'
   ];
+    List<Map<String, dynamic>> _parseFields(String fileContent) {
+    final List<Map<String, dynamic>> fields = [];
+    final RegExp fieldRegex = RegExp(r'final (\w+) (\w+);');    
+   for (final RegExpMatch match in fieldRegex.allMatches(fileContent)) {
+      final String type = match.group(1)!;
+      final String name = match.group(2)!;
+      fields.add({'name': name, 'type': type});
+    }
+    return fields;
+  }
+
 
   Future<void> createTables() async {
     final Map<String, List<Map<String, dynamic>>> schemas =
@@ -28,6 +40,7 @@ class SchemaCreator {
     await createFollowTable(schemas['follow']!);
     await createPubTable(schemas['pub']!);
     await createReviewTable(schemas['review']!);
+    await createUsersTable(schemas['users']!);
   }
 
   Future<void> createBarTable(List<Map<String, dynamic>> schema) async {
@@ -162,6 +175,21 @@ class SchemaCreator {
     }
   }
 
+  Future<void> createUsersTable(List<Map<String, dynamic>> schema) async {
+    try {
+      await client.rpc('delete_table', params: {'table_name': 'users'});
+      for (final field in schema) {
+       await client.rpc('create_column_if_not_exists', params: {
+          'table_name': 'users',
+          'column_name': field['name'],
+          'data_type': 'text',
+          'primary_key': field['name'] == 'id',
+        });
+      }
+    } catch (e) {
+      log('Error creating users table: $e');
+    }
+  }
   Future<Map<String, List<Map<String, dynamic>>>> readTableSchemas() async {
     final Map<String, List<Map<String, dynamic>>> tableSchemas = {};
     final Directory directory = Directory('lib/database/supabase');
@@ -180,16 +208,5 @@ class SchemaCreator {
     }
     return tableSchemas;
   }
-
-  List<Map<String, dynamic>> _parseFields(String fileContent) {
-    final List<Map<String, dynamic>> fields = [];
-    final RegExp fieldRegex = RegExp(r'final (\w+) (\w+);');    
-   for (final RegExpMatch match in fieldRegex.allMatches(fileContent)) {
-      final String type = match.group(1)!;
-      final String name = match.group(2)!;
-      fields.add({'name': name, 'type': type});
-    }
-    return fields;
-  }
-
+  
 }

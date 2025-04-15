@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:barfly/services/database_connection.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:barfly/services/database_connection.dart';
+import 'package:barfly/core/supabase_service.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load();
-
-  final DatabaseConnection databaseConnection = DatabaseConnection();
+  await dotenv.load(fileName: ".env");
+  await Supabase.initialize(
+      url: dotenv.get('SUPABASE_URL'),
+      anonKey: dotenv.get('SUPABASE_ANON_KEY'));
+  final supabaseService = SupabaseService(client: Supabase.instance.client);
+  final DatabaseConnection databaseConnection = DatabaseConnection(supabaseService: supabaseService);
   
   await databaseConnection.connectToDatabases();
+  await databaseConnection.addLog("timestamp","test","info","system");
   
-  runApp(const MyApp());
+  runApp(const MyApp());  
 }
 
 class MyApp extends StatelessWidget {
@@ -20,13 +27,20 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const primaryColor = Color(0xFF192A56);
+
     return MaterialApp(
       title: 'Barfly App',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+          brightness: Brightness.dark,
+          primary: primaryColor,
+          surface: const Color(0xFF000000),          
+        ),
         useMaterial3: true,
       ),
-      home: const StartPageWireframe(),
+      home: const Scaffold(backgroundColor: Color(0xFF000000), body: StartPageWireframe(),) ,
     );
   }
 }

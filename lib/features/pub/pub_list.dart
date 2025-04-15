@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:barfly/services/database_connection.dart';
 import 'package:barfly/database/mongodb/pub.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:barfly/core/supabase_service.dart';
 import 'package:barfly/database/mongodb/mongodb_constants.dart';
+
 
 class PubListPage extends StatefulWidget {
   const PubListPage({super.key});
@@ -22,10 +25,11 @@ class PubListPageState extends State<PubListPage> {
 
   Future<List<Pub>> loadPubs() async {
     try {
-      final dbConnection = DatabaseConnection();
+      final supabaseService = SupabaseService(client: Supabase.instance.client);
+      final dbConnection = DatabaseConnection(supabaseService: supabaseService);
       await dbConnection.connectToDatabases();
-      final mongoDBService = dbConnection.getMongoDBService;
-      final List<Map<String, dynamic>> result = await mongoDBService.getAll(MongoDatabaseConstants.pubCollection);
+      
+      final List<Map<String, dynamic>> result = await dbConnection.mongoDBService.getAll(MongoDatabaseConstants.pubCollection);
       return result
           .map((e) => Pub(
               name: e[MongoDatabaseConstants.pubNameKey].toString(),
@@ -35,7 +39,7 @@ class PubListPageState extends State<PubListPage> {
               longitude: double.parse(e[MongoDatabaseConstants.pubLongitudeKey].toString()),
               openingHours: e[MongoDatabaseConstants.pubOpeningHoursKey]?.toString() ?? '',
               description: e[MongoDatabaseConstants.pubDescriptionKey]?.toString() ?? '',
-              avgRating: double.parse(e[MongoDatabaseConstants.pubAvgRatingKey]?.toString() ?? '0.0'),              priceLevel: e[MongoDatabaseConstants.pubPriceLevelKey]?.toString() ?? '',
+              avgRating: double.parse(e[MongoDatabaseConstants.pubAvgRatingKey]?.toString() ?? '0.0'),              priceLevel: PriceLevel.values.byName(e[MongoDatabaseConstants.pubPriceLevelKey]?.toString() ?? 'low'),
               ))
               
           .toList();

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:barfly/services/database_connection.dart';
 import 'package:barfly/database/mongodb/pub.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:barfly/core/supabase_service.dart';
+
 import 'package:barfly/core/mongodb_constants.dart';
 
 class PubDetailPage extends StatefulWidget {
@@ -24,8 +27,9 @@ class PubDetailPageState extends State<PubDetailPage> {
 
    Future<Pub?> _loadPubData() async {
     try {
-      final dbConnection = DatabaseConnection();
-      final mongoDBService = dbConnection.getMongoDBService;
+      final supabaseService = SupabaseService(client: Supabase.instance.client);
+
+      final mongoDBService = DatabaseConnection(supabaseService: supabaseService).mongoDBService;
       final entity = await mongoDBService.getById(MongoDatabaseConstants.pubCollection,widget.pubId);
       if(entity == null){
         return null;

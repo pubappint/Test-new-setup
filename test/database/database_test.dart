@@ -1,52 +1,52 @@
+import 'package:barfly/core/supabase_service.dart';
+import 'package:barfly/core/user.dart' as user_model;
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:barfly/core/config.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:barfly/services/database_connection.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:barfly/core/mongodb_service.dart';
-import 'package:barfly/core/supabase_service.dart';
-import 'package:mocktail/mocktail.dart';
 
-class MockSharedPreferences extends Mock implements SharedPreferences {}
+void main() async {
+  late SupabaseService supabaseService;
+  late DatabaseConnection databaseConnection;
 
-void main() async{
-  final sharedPreferences = MockSharedPreferences();
+  setUpAll(
+    () async {
+    await Config.load();
+    await dotenv.load(fileName: ".env");
+    SharedPreferences.setMockInitialValues({});
+   await Supabase.initialize(
+        url: dotenv.get('SUPABASE_URL', fallback: ""),
+       anonKey: dotenv.get('SUPABASE_ANON_KEY'),
+    );
+    supabaseService = SupabaseService(client: Supabase.instance.client);    
+    databaseConnection = DatabaseConnection(supabaseService: supabaseService);
+    },
+  );
 
-  late MongoDBService mongoDBService;
-  late SupabaseService service;
-  await Config.load(); 
-
-  when(
-      () => sharedPreferences.setString(any(), any()),
-    ).thenAnswer((_) async => true);
-  when(() => sharedPreferences.getString(any())).thenReturn('foo');
-  SharedPreferences.setMockInitialValues({});
-
-
-  setUpAll(() async {
-    mongoDBService = MongoDBService();
-    service = SupabaseService();
-    await service.initialize();
-    await mongoDBService.connect();
-    // Kurze Pause, um sicherzustellen, dass die asynchrone Initialisierung abgeschlossen ist
-    await Future.delayed(Duration(seconds: 1));
-  });
-  
-  
   tearDownAll(() async {
-    await mongoDBService.close(); });
+    await databaseConnection.closeConnections();
+  });
   group('Database Tests', () {
+    group('Supabase User Tests', () {
+      test(
+        'insertProfile inserts a new profile and checks if it can be retrieved',
+        () async {
+        final testProfile = user_model.User(
+          id: 'test_id_2',
+          email: 'test@email.com',
+          username: 'test_user',
+          password: 'test_password',
+        );
+        final id = await supabaseService.insertProfile(testProfile);
+        final profile = await supabaseService.getProfile(id);
 
-    group('Supabase Tests', () {
-        test('Supabase client should not be null', () async {
-          expect(service.client, isNotNull);
-      });
-
-    });
-  
-    group('MongoDB Tests', () {
-      test('MongoDBService should not be null', () async {
-        expect(mongoDBService, isNotNull);
+        expect(profile.id, equals(testProfile.id));
+        expect(profile.email, equals(testProfile.email));
+        expect(profile.username, equals(testProfile.username));
+        expect(profile.password, equals(testProfile.password));
       });
     });
   });
-
 }

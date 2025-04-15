@@ -119,7 +119,7 @@
     * **Keine realen Kosten:** Der Prototyp soll keine Kosten verursachen.
     * **Vorgehen:** Die Daten müssen nach der Beschaffung geprüft und angepasst werden.
 
-**Wegbeschreibung:**
+**Wegbeschreibung/Navigation:**
     *   Es soll eine Funktion geben, die es dem Nutzer ermöglicht, sich zur Bar navigieren zu lassen.
 *   **Pubcrawl-Planung (später):**
     *   Die Funktion soll erweiterbar sein, um einen Pubcrawl zu planen.
@@ -138,13 +138,15 @@
 
 *   **Technologie-Stack:**
     *   **Programmiersprache:** Dart
-    *   **Framework:** Flutter
+    *   **Framework:** Flutter. Die Supabase-Datenbank wird direkt über das Flutter-Paket angesprochen.
     *   **Plattformen:** Android und iOS
 *   **Datenbank:**
-    *   **Relationale Daten:** Supabase
+    *   **Relationale Daten:** Supabase. Die Verbindung zur Supabase Datenbank wird direkt mit dem Flutter-Paket hergestellt. Es wird **kein Python** benötigt, um mit der Supabase Datenbank zu interagieren.
     *   **Nicht-relationale Daten:** MongoDB
     *   **Hosting:** Online (für beide Datenbanken)
 *   **Schnittstellen:**
+     * **Supabase**: Für die Interaktion mit Supabase wird das Flutter Paket verwendet.
+    * **Python:** Es wird **kein** Python verwendet.
     *   **Kartendienst:**
         *   **Leaflet:** Für die Darstellung der Karte.
         *   **OSRM:** Für die Wegbeschreibung.

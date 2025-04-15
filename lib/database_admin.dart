@@ -23,7 +23,7 @@ class DatabaseAdmin {
 
   Future<void> deleteAllLogs() async {
     try {
-      await databaseConnection.getMongoDBService.deleteAllLogs();
+      await databaseConnection.mongoDBService.deleteAllLogs();
     } catch (e){
       throw Exception("Logs konnten nicht gelöscht werden");
     }

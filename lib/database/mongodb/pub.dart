@@ -3,6 +3,8 @@ import 'dart:core';
 import '../../core/validation.dart';
 import '../../core/database_entity.dart';
 
+import 'package:barfly/core/log.dart';
+import 'package:barfly/database/mongodb/mongodb_log.dart';
 import 'mongodb_constants.dart';
 
 /// Represents a pub with various details.
@@ -32,7 +34,7 @@ class Pub implements DatabaseEntity {
   final double avgRating;
 
   /// The price level of the pub (e.g., $, $$, $$$).
-  final String priceLevel;
+  final PriceLevel priceLevel;
 
   Pub({
     required this.id,
@@ -57,6 +59,7 @@ class Pub implements DatabaseEntity {
   /// Throws an [ArgumentError] if any of the validation checks fail.
   void validate() {
     Validation.validateId(id);
+
     Validation.validateName(name);
     Validation.validateDescription(description);
     Validation.validateAddress(address);
@@ -80,15 +83,25 @@ class Pub implements DatabaseEntity {
   @override
   Pub fromDatabase(Map<String, dynamic> map) {    
     return Pub(
-      id: map[MongoDatabaseConstants.idKey] as String? ?? '',
-      name: map[MongoDatabaseConstants.pubNameKey] as String? ?? '',
-      address: map[MongoDatabaseConstants.pubAddressKey] as String? ?? '',
-      latitude: map[MongoDatabaseConstants.pubLatitudeKey] as double? ?? 0.0,
-      longitude: map[MongoDatabaseConstants.pubLongitudeKey] as double? ?? 0.0,
-      openingHours: map['openingHours'] as String? ?? '',
-      description: map['description'] as String? ?? '',
-      avgRating: map[MongoDatabaseConstants.eventAvgRatingKey] as double? ?? 0.0,
-      priceLevel: map[MongoDatabaseConstants.eventPriceLevelKey] as String? ?? ''
+        id: map[MongoDatabaseConstants.idKey] as String? ?? '',
+        name: map[MongoDatabaseConstants.pubNameKey] as String? ?? '',
+        address: map[MongoDatabaseConstants.pubAddressKey] as String? ?? '',
+        latitude: map[MongoDatabaseConstants.pubLatitudeKey] as double? ?? 0.0,
+        longitude:
+            map[MongoDatabaseConstants.pubLongitudeKey] as double? ?? 0.0,
+        openingHours: map['openingHours'] as String? ?? '',
+        description: map['description'] as String? ?? '',
+        avgRating:
+            map[MongoDatabaseConstants.eventAvgRatingKey] as double? ?? 0.0,
+        priceLevel: () {
+          final priceLevelString =
+              map[MongoDatabaseConstants.eventPriceLevelKey] as String?;
+          if (priceLevelString == null) return PriceLevel.low;
+          try {
+            return PriceLevel.values.byName(priceLevelString);
+          } catch(e) {MongoDBLog(timestamp: DateTime.now().toIso8601String(), message: "error: $e", user: "Database", level: Log.kSevere);}
+          return PriceLevel.low;
+        }()
     );
   }
 
@@ -98,14 +111,30 @@ class Pub implements DatabaseEntity {
   /// Converts the [Pub] object into a map that can be stored in a database.
   @override
   Map<String, dynamic> toDatabase() => {
+        'id': id,
+        'name': name,
+        'address': address,
+        MongoDatabaseConstants.pubLatitudeKey: latitude,
+        MongoDatabaseConstants.pubLongitudeKey: longitude,
+        'openingHours': openingHours,
+        'description': description,
+        MongoDatabaseConstants.eventAvgRatingKey: avgRating,
+        MongoDatabaseConstants.eventPriceLevelKey: priceLevel.name
+      };
+
+   /// Converts the [Pub] object into a map that can be serialized to JSON.
+  ///
+  /// This method returns a map representation of the [Pub] object suitable for
+  /// JSON serialization. It includes all the properties of the pub.
+  Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,
     'address': address,
-    MongoDatabaseConstants.pubLatitudeKey: latitude,
-    MongoDatabaseConstants.pubLongitudeKey: longitude,
+    'latitude': latitude,
+    'longitude': longitude,
     'openingHours': openingHours,
     'description': description,
-    MongoDatabaseConstants.eventAvgRatingKey: avgRating,
-    MongoDatabaseConstants.eventPriceLevelKey: priceLevel
+    'avgRating': avgRating,
+    'priceLevel': priceLevel.name,
   };
 }

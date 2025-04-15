@@ -17,29 +17,21 @@
     -   [x] Dokumentiere die Primary Keys, Foreign Keys und Indizes.
 -   [x] **Datentypen festlegen**:
     -   [x] Lege alle Datentypen fest.
--   [ ] **Verbindung aufbauen und testen**:
-      ## Einrichtung der Testumgebung
-        -  Schritt 1: Überprüfe, ob Python installiert ist: Führe den Befehl `python3 --version` im Terminal aus.
-        - Wähle `python310Full` aus, um Python zu installieren.
-        -  Schritt 2: Installiere Python, falls es noch nicht installiert ist.
-        - Schritt 3: Erstelle eine Virtuelle Umgebung mit dem Befehl: `python3 -m venv .venv`.
-        - Schritt 4: Aktiviere die Virtuelle Umgebung mit dem Befehl: `source .venv/bin/activate` für Linux/Mac oder `.venvScriptsactivate` für Windows.
-      
-        -   [ ] **Supabase:**
-                -   [ ] Abhängigkeit installieren.
-                -   [ ] Konfiguration hinterlegen.
-                -   [ ] Verbindung herstellen.
-                -   [ ] Verbindung testen.
-        -   [ ] **MongoDB:**
-                -   [ ] Abhängigkeit installieren.
-                -   [ ] Konfiguration hinterlegen.
-                -   [ ] Verbindung herstellen.
-                -   [ ] Verbindung testen.
-- [ ] **Datenbank befüllung**:
-  - [ ] Lege fest, welche Daten befüllt werden müssen.
-  - [ ] Lege fest, wie die Daten in die Datenbank geschrieben werden.
-  - [ ] Schreibe Daten in die Datenbank.
-  - [ ] Verifiziere die Daten in der Datenbank.
+-   [ ] **Verbindung aufbauen und testen mit Flutter**:
+      - [x] **Supabase:**
+          - [x] Abhängigkeit installieren.
+          - [x] Konfiguration hinterlegen.
+          - [x] Verbindung herstellen.
+          - [x] Verbindung testen.
+      - [ ] **MongoDB:**
+          - [x] Abhängigkeit installieren.
+          - [x] Konfiguration hinterlegen.
+          - [ ] Verbindung herstellen.
+          - [ ] Verbindung testen.
+
+
+
+
 - [ ] **Test der Datenbankverbindung**:
     -[ ] Testen der Verbindung
     
